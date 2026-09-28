@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>하이디라오 3인 주문 가이드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F4F2; --paper:#FFFFFF; --ink:#2A1714; --muted:#7A6560; --line:#E6DCD8;
+  --chili:#C8321E; --tomato:#E8712C; --mush:#8C6A4F; --clear:#6E8F86;
+  --chili-soft:#FBE6E2; --tomato-soft:#FDEEE3;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#1C1412; --paper:#271D1A; --ink:#F3E9E6; --muted:#B39D97; --line:#3D2F2B;
+    --chili:#F0634D; --tomato:#F4924F; --mush:#C39E80; --clear:#8FB5AA;
+    --chili-soft:#3A201B; --tomato-soft:#3A271B;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1C1412; --paper:#271D1A; --ink:#F3E9E6; --muted:#B39D97; --line:#3D2F2B;
+  --chili:#F0634D; --tomato:#F4924F; --mush:#C39E80; --clear:#8FB5AA;
+  --chili-soft:#3A201B; --tomato-soft:#3A271B;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Noto Sans KR",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:640px;margin:0 auto;padding:0 20px 64px}
+h1,h2{font-family:"Black Han Sans","Noto Sans KR",sans-serif;font-weight:400;letter-spacing:-0.01em;line-height:1.15;margin:0}
+h2{font-size:1.65rem;margin:0 0 6px}
+p{margin:0 0 12px}
+.sub{color:var(--muted);font-size:.95rem;margin-bottom:18px}
+
+/* hero */
+.hero{padding:36px 0 20px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
+.hero h1{font-size:clamp(2.2rem,9vw,3.2rem)}
+.hero h1 span{display:block;color:var(--muted);font-family:"Noto Sans KR",sans-serif;font-weight:500;font-size:1rem;margin-top:10px;letter-spacing:0}
+.pot{width:132px;height:132px}
+.pot .sec{cursor:pointer;transition:transform .25s}
+.pot .sec:hover{transform:scale(1.04)}
+.pot-legend{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.85rem;color:var(--muted)}
+.pot-legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+
+section{padding:28px 0;border-top:1px solid var(--line)}
+
+/* notes */
+.fix{margin:0;padding:0;list-style:none}
+.fix li{padding:10px 0 10px 14px;border-left:3px solid var(--chili);margin-bottom:10px;background:var(--paper);border-radius:0 8px 8px 0;padding-right:12px}
+.fix b{display:block}
+
+/* order checklist */
+.round{font-weight:700;margin:18px 0 8px;font-size:1rem}
+.items{list-style:none;margin:0;padding:0;background:var(--paper);border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+.items li+li{border-top:1px solid var(--line)}
+.items label{display:grid;grid-template-columns:26px 1fr auto;gap:10px;align-items:center;padding:13px 14px;cursor:pointer}
+.items input{appearance:none;width:22px;height:22px;border:2px solid var(--line);border-radius:6px;margin:0;display:grid;place-items:center;background:var(--bg)}
+.items input:checked{background:var(--chili);border-color:var(--chili)}
+.items input:checked::after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.items input:focus-visible{outline:3px solid var(--tomato);outline-offset:2px}
+.items .name{font-weight:700}
+.items .memo{display:block;font-size:.85rem;color:var(--muted);font-weight:400}
+.items .qty{font-size:.9rem;color:var(--chili);font-weight:700;white-space:nowrap}
+.items li.done .name{text-decoration:line-through;color:var(--muted)}
+.tools{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:.88rem;color:var(--muted)}
+button.reset{font:inherit;background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:5px 12px;cursor:pointer}
+button.reset:focus-visible{outline:3px solid var(--tomato);outline-offset:2px}
+.budget{margin-top:16px;padding:14px 16px;background:var(--tomato-soft);border-radius:12px;font-size:.95rem}
+
+/* broths */
+.broth{display:grid;grid-template-columns:14px 1fr;gap:12px;padding:10px 0}
+.broth .dot{width:14px;height:14px;border-radius:50%;margin-top:5px}
+.broth b{display:block}
+.broth small{color:var(--muted);font-size:.88rem}
+
+/* timing */
+.timing{display:grid;gap:8px}
+.t{display:grid;grid-template-columns:7.5em 1fr;align-items:center;gap:12px;font-size:.95rem}
+.bar{position:relative;height:28px;background:var(--paper);border-radius:6px;border:1px solid var(--line);overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0;background:var(--chili-soft);border-right:3px solid var(--chili)}
+.bar span{position:relative;padding-left:10px;line-height:26px;font-size:.85rem;font-weight:700}
+
+/* combos */
+.combo{background:var(--paper);border-radius:14px;padding:16px;border:1px solid var(--line);margin-bottom:12px}
+.combo h3{margin:0 0 8px;font-size:1.05rem}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 8px;padding:0;list-style:none}
+.flow li{background:var(--bg);padding:3px 10px;border-radius:999px;font-size:.9rem}
+.flow li:not(:last-child)::after{content:"›";margin-left:8px;color:var(--muted)}
+.combo p{font-size:.9rem;color:var(--muted);margin:0}
+
+/* sauces */
+.sauce{margin-bottom:22px}
+.sauce h3{margin:0 0 2px;font-size:1.1rem}
+.sauce .for{font-size:.88rem;color:var(--muted);margin-bottom:10px}
+.recipe{display:flex;flex-wrap:wrap;gap:6px}
+.recipe span{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-size:.9rem}
+.recipe span b{color:var(--chili);margin-left:4px}
+.tip{font-size:.9rem;margin-top:10px;padding-left:12px;border-left:3px solid var(--tomato)}
+
+.extras{padding-left:1.1em;margin:0}
+.extras li{margin-bottom:8px}
+footer{color:var(--muted);font-size:.82rem;padding-top:24px;border-top:1px solid var(--line)}
+
+@media (prefers-reduced-motion:reduce){.pot .sec{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>하이디라오<br>3인 주문 가이드<span>시키고, 익히고, 찍어 먹는 순서대로</span></h1>
+  <svg class="pot" viewBox="0 0 120 120" role="img" aria-label="4칸 탕: 마라, 토마토, 버섯, 맑은탕">
+    <circle cx="60" cy="60" r="58" fill="none" stroke="var(--ink)" stroke-width="3"/>
+    <path class="sec" d="M60 60 L60 5 A55 55 0 0 1 115 60 Z" fill="var(--chili)" style="transform-origin:60px 60px"/>
+    <path class="sec" d="M60 60 L115 60 A55 55 0 0 1 60 115 Z" fill="var(--tomato)" style="transform-origin:60px 60px"/>
+    <path class="sec" d="M60 60 L60 115 A55 55 0 0 1 5 60 Z" fill="var(--mush)" style="transform-origin:60px 60px"/>
+    <path class="sec" d="M60 60 L5 60 A55 55 0 0 1 60 5 Z" fill="var(--clear)" style="transform-origin:60px 60px"/>
+    <line x1="60" y1="3" x2="60" y2="117" stroke="var(--ink)" stroke-width="3"/>
+    <line x1="3" y1="60" x2="117" y2="60" stroke="var(--ink)" stroke-width="3"/>
+  </svg>
+  <div class="pot-legend">
+    <span><i style="background:var(--chili)"></i>마라</span>
+    <span><i style="background:var(--tomato)"></i>토마토</span>
+    <span><i style="background:var(--mush)"></i>버섯</span>
+    <span><i style="background:var(--clear)"></i>맑은탕</span>
+  </div>
+</header>
+
+<section>
+  <h2>가기 전에 알아둘 것</h2>
+  <ul class="fix">
+    <li><b>반판을 적극 활용</b>대부분 메뉴에 반판이 있어요. 3명이면 풀판을 적게 시키는 것보다 반판으로 종류를 늘리는 게 만족도가 높아요.</li>
+    <li><b>탕은 칸마다 가격이 붙어요</b>맑은탕 무료 여부는 지점마다 달라요. 부담되면 2칸(마라+토마토)도 3명에게 충분해요.</li>
+    <li><b>소스바는 1인당 이용료가 따로</b>예산 계산할 때 빠뜨리기 쉬워요.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>탕 고르기</h2>
+  <p class="sub">2칸이면 위 두 개, 4칸이면 네 개 전부.</p>
+  <div class="broth"><i class="dot" style="background:var(--chili)"></i><div><b>마라탕</b><small>매운 거 잘 먹으면 우지마라, 적당히면 청유마라</small></div></div>
+  <div class="broth"><i class="dot" style="background:var(--tomato)"></i><div><b>토마토탕</b><small>새우완자와 면 전용. 국물만 떠먹어도 맛있어요</small></div></div>
+  <div class="broth"><i class="dot" style="background:var(--mush)"></i><div><b>버섯탕</b><small>매운 거 못 먹는 사람이 있으면 필수</small></div></div>
+  <div class="broth"><i class="dot" style="background:var(--clear)"></i><div><b>맑은탕 또는 삼선탕</b><small>고기 본연의 맛, 입가심용</small></div></div>
+</section>
+
+<section>
+  <h2>태블릿 주문표</h2>
+  <p class="sub">주문한 건 눌러서 체크해두세요.</p>
+
+  <div class="round">1차 주문</div>
+  <ul class="items" id="order1">
+    <li><label><input type="checkbox" data-k="a1"><span class="name">우삼겹<span class="memo">무조건, 가장 실패 없음</span></span><span class="qty">1판</span></label></li>
+    <li><label><input type="checkbox" data-k="a2"><span class="name">양고기 또는 소목심<span class="memo">양 못 먹는 사람 있으면 소목심</span></span><span class="qty">1판</span></label></li>
+    <li><label><input type="checkbox" data-k="a3"><span class="name">새우완자<span class="memo">직원이 넣어줌, 토마토탕 추천</span></span><span class="qty">1</span></label></li>
+    <li><label><input type="checkbox" data-k="a4"><span class="name">두유피튀김<span class="memo">3초만 담그기</span></span><span class="qty">1</span></label></li>
+    <li><label><input type="checkbox" data-k="a5"><span class="name">야채모둠<span class="memo">토마토·버섯탕용</span></span><span class="qty">반판</span></label></li>
+    <li><label><input type="checkbox" data-k="a6"><span class="name">버섯모둠<span class="memo">4칸일 때 추천</span></span><span class="qty">반판</span></label></li>
+    <li><label><input type="checkbox" data-k="a7"><span class="name">감자당면<span class="memo">마라탕에</span></span><span class="qty">1</span></label></li>
+    <li><label><input type="checkbox" data-k="a8"><span class="name">쿵푸면<span class="memo">후반부, 면 뽑는 퍼포먼스</span></span><span class="qty">1</span></label></li>
+  </ul>
+
+  <div class="round">2차 추가 (배 상태 보고)</div>
+  <ul class="items" id="order2">
+    <li><label><input type="checkbox" data-k="b1"><span class="name">우삼겹 추가<span class="memo">고기가 부족할 때</span></span><span class="qty">1판</span></label></li>
+    <li><label><input type="checkbox" data-k="b2"><span class="name">쿵푸면 또는 볶음밥<span class="memo">탄수화물로 마무리할 때</span></span><span class="qty">1</span></label></li>
+  </ul>
+
+  <div class="tools"><span id="count">0 / 10 주문함</span><button class="reset" id="reset" type="button">체크 초기화</button></div>
+
+  <div class="budget">3명 기준 대략 <b>10만~14만 원</b>. 많이 먹으면 그 이상이고, 지점별로 가격 차이가 있어요.</div>
+</section>
+
+<section>
+  <h2>익히는 시간</h2>
+  <p class="sub">맛은 여기서 갈려요.</p>
+  <div class="timing">
+    <div class="t"><span>두유피튀김</span><div class="bar"><i style="width:6%"></i><span>3~5초</span></div></div>
+    <div class="t"><span>우삼겹·소고기</span><div class="bar"><i style="width:12%"></i><span>10~15초, 색 변하면 바로</span></div></div>
+    <div class="t"><span>양고기</span><div class="bar"><i style="width:18%"></i><span>20~30초</span></div></div>
+    <div class="t"><span>쿵푸면</span><div class="bar"><i style="width:50%"></i><span>2~3분</span></div></div>
+    <div class="t"><span>새우완자</span><div class="bar"><i style="width:60%"></i><span>떠오르고 1분 더</span></div></div>
+    <div class="t"><span>감자당면</span><div class="bar"><i style="width:85%"></i><span>3~5분, 투명해질 때</span></div></div>
+    <div class="t"><span>야채·버섯</span><div class="bar"><i style="width:85%"></i><span>3~5분</span></div></div>
+  </div>
+</section>
+
+<section>
+  <h2>탕별 먹는 순서</h2>
+  <div class="combo">
+    <h3 style="color:var(--chili)">마라탕</h3>
+    <ol class="flow"><li>우삼겹</li><li>소목심/양고기</li><li>두유피</li><li>감자당면</li></ol>
+    <p>당면이 마라 국물을 머금어서 마지막이 별미예요.</p>
+  </div>
+  <div class="combo">
+    <h3 style="color:var(--tomato)">토마토탕</h3>
+    <ol class="flow"><li>새우완자</li><li>야채</li><li>쿵푸면</li></ol>
+    <p>토마토 국물에 익힌 면은 거의 파스타 느낌. 국물을 그릇에 떠서 파·고수 넣어 마셔도 좋아요.</p>
+  </div>
+</section>
+
+<section>
+  <h2>소스 3종</h2>
+  <p class="sub">숟가락 기준. 3명이면 ①을 2개, ②나 ③을 1개.</p>
+
+  <div class="sauce">
+    <h3>① 건희소스</h3>
+    <div class="for">고기용</div>
+    <div class="recipe">
+      <span>땅콩참깨소스<b>1</b></span><span>스위트칠리<b>2.5</b></span><span>고추기름<b>1</b></span>
+      <span>다진 땅콩<b>1</b></span><span>깨<b>1</b></span><span>다진 마늘<b>0.5</b></span>
+      <span>다진 파<b>0.5</b></span><span>볶음소고기소스<b>0.5</b></span><span>고춧가루<b>0.5</b></span><span>설탕<b>0.5</b></span>
+    </div>
+    <p class="tip">스위트칠리가 이미 달아서 설탕은 빼거나 조금만. 매운 거 좋아하면 태국고추 약간. 비율은 출처마다 조금씩 달라요.</p>
+  </div>
+
+  <div class="sauce">
+    <h3>② 담백 간장소스</h3>
+    <div class="for">새우완자·두유피용</div>
+    <div class="recipe">
+      <span>간장<b>2</b></span><span>식초<b>1</b></span><span>참기름<b>1</b></span><span>다진 마늘<b>1</b></span><span>파</span><span>고수 (취향)</span>
+    </div>
+  </div>
+
+  <div class="sauce">
+    <h3>③ 참기름 마늘소스</h3>
+    <div class="for">마라탕 고기용</div>
+    <div class="recipe">
+      <span>참기름<b>3</b></span><span>다진 마늘<b>1</b></span><span>파</span><span>굴소스 약간</span>
+    </div>
+    <p class="tip">마라 건더기를 여기 찍으면 매운맛이 누그러져요. 중국 현지식 정석.</p>
+  </div>
+</section>
+
+<section>
+  <h2>알아두면 좋은 것</h2>
+  <ul class="extras">
+    <li>대기가 긴 지점이 많으니 원격 줄서기나 예약이 되는지 미리 확인하세요.</li>
+    <li>소스바에 과일·디저트류가 무료로 있는 경우가 많아요. 마지막에 챙기세요.</li>
+    <li>쿵푸면은 직원이 테이블 옆에서 면을 뽑아줘요. 다 같이 볼 때 시키세요.</li>
+  </ul>
+</section>
+
+<footer>메뉴·가격·탕 구성은 지점마다 다를 수 있어요. 맛있게 드세요.</footer>
+</div>
+
+<script>
+(function(){
+  const KEY='hdl3-checks';
+  const boxes=[...document.querySelectorAll('.items input')];
+  const count=document.getElementById('count');
+  let saved={};
+  try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){saved={}}
+  function render(){
+    let n=0;
+    boxes.forEach(b=>{b.closest('li').classList.toggle('done',b.checked);if(b.checked)n++;});
+    count.textContent=n+' / '+boxes.length+' 주문함';
+  }
+  boxes.forEach(b=>{
+    b.checked=!!saved[b.dataset.k];
+    b.addEventListener('change',()=>{
+      saved[b.dataset.k]=b.checked;
+      try{localStorage.setItem(KEY,JSON.stringify(saved))}catch(e){}
+      render();
+    });
+  });
+  document.getElementById('reset').addEventListener('click',()=>{
+    saved={};boxes.forEach(b=>b.checked=false);
+    try{localStorage.removeItem(KEY)}catch(e){}
+    render();
+  });
+  render();
+})();
+</script>
+</body>
+</html>
